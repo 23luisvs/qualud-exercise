@@ -1,4 +1,5 @@
 import {
+    IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -31,6 +32,9 @@ const ALL_USERS = gql`
 const Home: React.FC = () => {
   const result = useQuery(ALL_USERS);
   console.log(result);
+  const handleSubmit=(e: React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+  }
 
   return (
     <IonPage>
@@ -45,15 +49,16 @@ const Home: React.FC = () => {
             </IonCardHeader>
 
             <IonCardContent>
-              <form>
-                <IonItem fill="outline">
+              <form onSubmit={handleSubmit}>
+                <IonItem fill="outline" className="ion-margin-bottom">
                   <IonLabel position="floating">User</IonLabel>
-                  <IonInput placeholder="Enter text"></IonInput>
+                  <IonInput placeholder="Enter user"></IonInput>
                 </IonItem>
-                <IonItem fill="outline">
+                <IonItem fill="outline" className="ion-margin-bottom">
                   <IonLabel position="floating">Password</IonLabel>
-                  <IonInput type="password" placeholder="Enter text"></IonInput>
+                  <IonInput type="password" placeholder="Enter password"></IonInput>
                 </IonItem>
+                <IonButton expand="full" type="submit">Log In</IonButton>
               </form>
             </IonCardContent>
           </IonCard>
