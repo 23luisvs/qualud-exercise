@@ -1,4 +1,9 @@
-export interface User{
-    name:string;
-    token:string;
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  gender: string;
+  posts: {
+    totalCount: number;
+  };
 }

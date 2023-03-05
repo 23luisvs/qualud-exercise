@@ -2,6 +2,7 @@ import { IonRouterOutlet } from "@ionic/react";
 import { Route, Redirect } from "react-router-dom";
 import Menu from "../components/Menu";
 import Home from "../pages/Home";
+import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
 import Users from "../pages/users/Users";
 
@@ -11,6 +12,9 @@ const AppRoutes: React.FC = () => {
       <Menu />
       <IonRouterOutlet id="main-content">
         {/* Main routes */}
+        <Route exact path="/login">
+          <Login />
+        </Route>
         <Route exact path="/home">
           <Home />
         </Route>
