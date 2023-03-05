@@ -1,0 +1,7 @@
+{
+  "name": "qualud-exercise",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
