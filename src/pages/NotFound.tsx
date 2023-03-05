@@ -7,7 +7,7 @@ import './Home.css';
 const NotFound: React.FC = () => {
   return (
     <IonPage>
-      <Header/>
+      <Header page="Not Found"/>
       <IonContent fullscreen>
         <p>La ruta a la que intenta acceder no existe.</p>
        <h3>Ir al <Link to="/">Inicio</Link></h3>

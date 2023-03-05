@@ -8,17 +8,16 @@ import {
 } from "@ionic/react";
 import { moonOutline } from "ionicons/icons";
 
-interface ContainerProps {}
+interface ContainerProps {
+  page?: string;
+}
 
-const Header: React.FC<ContainerProps> = () => {
+const Header: React.FC<ContainerProps> = ({ page }) => {
   return (
     <IonHeader>
       <IonToolbar>
-        <IonTitle>Header</IonTitle>
+        <IonTitle>{page}</IonTitle>
         <IonButtons slot="end">
-          <span className="toogle-theme ion-margin-end">
-            <IonIcon icon={moonOutline}></IonIcon>
-          </span>
           <IonMenuButton></IonMenuButton>
         </IonButtons>
       </IonToolbar>

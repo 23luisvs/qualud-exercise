@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 const Users: React.FC = () => {
   return (
     <IonPage>
-      <Header/>
+      <Header page="Users"/>
       <IonContent fullscreen>
         <h3>Users</h3>
         <ExploreContainer />

@@ -6,7 +6,7 @@ import './Home.css';
 const Home: React.FC = () => {
   return (
     <IonPage>
-      <Header/>
+      <Header page='Home'/>
       <IonContent fullscreen>
         <h3>Home</h3>
         <ExploreContainer />
