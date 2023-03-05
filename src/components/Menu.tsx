@@ -12,18 +12,24 @@ import {
   IonButton,
 } from "@ionic/react";
 import { close, exitOutline, moonOutline } from "ionicons/icons";
+import { useTheme } from "../store/ThemeContext";
 import MenuItem from "./MenuItem";
 
 interface ContainerProps {}
 
 const Menu: React.FC<ContainerProps> = () => {
+  const theme = useTheme();
   return (
     <IonMenu contentId="main-content">
       <IonHeader>
         <IonToolbar>
           <IonTitle>Menu</IonTitle>
           <IonButtons slot="end">
-            <IonItem lines="none" button>
+            <IonItem
+              lines="none"
+              button
+              onClick={() => theme.setThemeDark(!theme.dark)}
+            >
               <IonIcon icon={moonOutline}></IonIcon>
             </IonItem>
             <IonItem lines="none" button>
@@ -34,14 +40,12 @@ const Menu: React.FC<ContainerProps> = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="">
         <IonMenuToggle>
-          <IonList>
-            <MenuItem link="/home">Home</MenuItem>
-            <MenuItem link="/users">Users</MenuItem>
-            <MenuItem link="/posts">Posts</MenuItem>
-          </IonList>
-          <div className="ion-text-end">
+          <MenuItem link="/home">Home</MenuItem>
+          <MenuItem link="/users">Users</MenuItem>
+          <MenuItem link="/posts">Posts</MenuItem>
+          <div className="ion-text-end ion-padding">
             <IonButton onClick={() => console.log("Sign out")}>
               Sign Out
               <IonIcon slot="end" icon={exitOutline}></IonIcon>
