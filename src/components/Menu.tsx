@@ -4,7 +4,9 @@ import {
   IonTitle,
   IonContent,
   IonMenu,
+  IonList,
 } from "@ionic/react";
+import MenuItem from "./MenuItem";
 
 interface ContainerProps {}
 
@@ -16,7 +18,13 @@ const Menu: React.FC<ContainerProps> = () => {
           <IonTitle>Menu</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">This is the menu content.</IonContent>
+      <IonContent className="ion-padding">
+        <IonList>
+            <MenuItem link="/home">Home</MenuItem>
+            <MenuItem link="/users">Users</MenuItem>
+            <MenuItem link="/posts">Posts</MenuItem>
+        </IonList>
+      </IonContent>
     </IonMenu>
   );
 };
