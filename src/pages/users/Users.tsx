@@ -1,20 +1,13 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../../components/ExploreContainer';
+import Header from '../../components/Header';
 
 const Users: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Users</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <Header page="Users"/>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Users</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <h3>Users</h3>
         <ExploreContainer />
       </IonContent>
     </IonPage>
