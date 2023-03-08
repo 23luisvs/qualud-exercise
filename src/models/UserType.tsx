@@ -3,7 +3,5 @@ export interface User {
   name: string;
   email: string;
   gender: string;
-  posts: {
-    totalCount: number;
-  };
+  status:string;
 }

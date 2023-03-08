@@ -12,23 +12,25 @@ import {
   IonButton,
 } from "@ionic/react";
 import { close, exitOutline, moonOutline } from "ionicons/icons";
+import { useAuth } from "../store/AuthContext";
 import { useTheme } from "../store/ThemeContext";
 import MenuItem from "./MenuItem";
 
 interface ContainerProps {}
 
 const Menu: React.FC<ContainerProps> = () => {
-  const theme = useTheme();
+  const {dark,setThemeDark} = useTheme();
+  const {user}=useAuth();
   return (
     <IonMenu contentId="main-content">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Menu</IonTitle>
+          <IonTitle>{user?.name}</IonTitle>
           <IonButtons slot="end">
             <IonItem
               lines="none"
               button
-              onClick={() => theme.setThemeDark(!theme.dark)}
+              onClick={() => setThemeDark(!dark)}
             >
               <IonIcon icon={moonOutline}></IonIcon>
             </IonItem>

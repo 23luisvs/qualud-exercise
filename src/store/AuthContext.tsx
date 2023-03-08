@@ -13,7 +13,8 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
   let navigate = useHistory();
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (username: string, password: string) => {
+  const login = (user:User) => {
+    setUser(user);
     navigate.replace("/");
   };
   const logout = () => {
