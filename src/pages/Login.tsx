@@ -40,7 +40,7 @@ const Home: React.FC = () => {
     <IonPage>
       <IonContent fullscreen>
         <div className="container">
-          <IonCard className="ion-margin max-w500">
+          <IonCard className="ion-margin max-w500 ion-margin">
             <IonCardHeader>
               <IonCardTitle>Log In</IonCardTitle>
               <IonCardSubtitle>
