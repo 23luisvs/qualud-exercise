@@ -1,6 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonPage } from '@ionic/react';
 import { Link } from 'react-router-dom';
-import ExploreContainer from '../components/ExploreContainer';
 import Header from '../components/Header';
 import './Home.css';
 

@@ -10,6 +10,7 @@
     "@capacitor/core": "4.7.0",
     "@capacitor/haptics": "4.1.0",
     "@capacitor/keyboard": "4.1.1",
+    "@capacitor/network": "^4.1.0",
     "@capacitor/status-bar": "4.1.1",
     "@hookform/resolvers": "^2.9.11",
     "@ionic/pwa-elements": "^3.1.1",

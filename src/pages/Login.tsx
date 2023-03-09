@@ -24,40 +24,37 @@ import { useAuth } from "../store/AuthContext";
 import { LoginFormData, loginSchema } from "../hooks/LoginController";
 import { User } from "../models/UserType";
 
-const GET_USER = gql`
-  query ($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      email
-      gender
-      posts {
-        nodes {
-          id
+const GET_FIRST_USER = gql`
+  query {
+    users(first: 1) {
+      nodes {
+        id
+        name
+        email
+        gender
+        posts {
+          totalCount
         }
-        totalCount
-      }
-      todos {
-        nodes {
-          id
+        todos {
+          totalCount
         }
-        totalCount
       }
+      totalCount
     }
   }
 `;
 
 const Home: React.FC = () => {
-  const [getUser, { loading, error, data }] = useLazyQuery(GET_USER);
+  const [getUser, { loading, error, data }] = useLazyQuery(GET_FIRST_USER);
 
   const { user, login } = useAuth();
   const [present] = useIonToast();
   //hook used to save user. When data change, if exist data means that the query returned an user.
   useEffect(() => {
     if (data) {
-      console.log(data.user);
+      console.log(data.users.nodes[0]);
 
-      login(data.user as User);
+      login(data.users.nodes[0] as User);
     }
   }, [data]);
   //if exist an error lanch a toast
@@ -81,11 +78,7 @@ const Home: React.FC = () => {
       dataForm.username.toLowerCase() === "padma" ||
       dataForm.username.toLowerCase() === "saini"
     ) {
-      getUser({
-        variables: {
-          id: dataForm.username.toLowerCase() === "padma" ? 897852 : 897852,
-        },
-      });
+      getUser();
     } else {
       console.log("no user exist");
       present({
