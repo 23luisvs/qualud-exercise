@@ -14,14 +14,15 @@ const AppRoutes: React.FC = () => {
       {user && <Menu />}
       <IonRouterOutlet id="main-content">
         {/* Main routes */}
-        <Route exact path="/">
-          {user ? <Redirect to="/home" /> : <Redirect to="/login" />}
-        </Route>
         <Route exact path="/login">
           <Login />
         </Route>
         <Route exact path="/home">
           <Home />
+        </Route>
+
+        <Route exact path="/">
+          {user ? <Redirect to="/home" /> : <Redirect to="/login" />}
         </Route>
 
         {/*Routes for users */}

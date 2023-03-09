@@ -5,38 +5,17 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonIcon,
-  IonLabel,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
-import { gql, useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import "./Home.css";
-import { Icon } from "ionicons/dist/types/components/icon/icon";
 import { arrowForward } from "ionicons/icons";
 
-const ALL_USERS = gql`
-  query {
-    users {
-      nodes {
-        id
-        name
-      }
-      totalCount
-    }
-  }
-`;
-
 const Home: React.FC = () => {
-  const result = useQuery(ALL_USERS);
-  console.log(result);
-
   return (
     <IonPage>
-      <Header page="Not Found" />
+      <Header pageTitle="QUALUD." />
       <IonContent fullscreen>
         <div className="ion-padding ion-align-items-center ion-justify-content-center">
           <IonCard>
@@ -53,9 +32,11 @@ const Home: React.FC = () => {
                   usuario en el mismo listado.
                 </li>
               </ul>
-              <IonButton>
-                Go to page <IonIcon slot="end" icon={arrowForward} />
-              </IonButton>
+              <div className="ion-text-end">
+                <IonButton routerLink="/users" routerDirection="forward">
+                  Go to page <IonIcon slot="end" icon={arrowForward} />
+                </IonButton>
+              </div>
             </IonCardContent>
           </IonCard>
         </div>
