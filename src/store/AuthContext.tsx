@@ -23,7 +23,7 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
   };
   const logout = () => {
     setUser(null);
-    navigate.replace("/login");
+    navigate.replace("/");
   };
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
