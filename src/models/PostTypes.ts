@@ -4,14 +4,14 @@ import { User } from "./UserType";
 
 
 export interface PostConnection {
-    edges: PostEdge[];
+    edges?: PostEdge[];
     nodes: Post[];
     pageInfo: PageInfo;
     totalCount: number;
 }
 export interface Post {
     body: string;
-    comments: CommentConnection;
+    comments?: CommentConnection;
     id: number;
     title: string;
     user: User;

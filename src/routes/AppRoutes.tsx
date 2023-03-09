@@ -9,6 +9,7 @@ import { useAuth } from "../store/AuthContext";
 import { Network } from "@capacitor/network";
 import Offline from "../pages/Offline";
 import { useEffect, useState } from "react";
+import Posts from "../pages/posts/Posts";
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -49,9 +50,12 @@ const AppRoutes: React.FC = () => {
         <Route exact path="/offline">
           <Offline />
         </Route>
-        {/*Routes for users */}
+        {/*Routes for Functional Requirements */}
         <Route exact path="/users">
           <Users />
+        </Route>
+        <Route exact path="/posts">
+          <Posts />
         </Route>
         <Route component={NotFound} />
       </IonRouterOutlet>

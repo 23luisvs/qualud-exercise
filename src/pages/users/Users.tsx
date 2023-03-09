@@ -50,9 +50,6 @@ const Users: React.FC = () => {
         color: "danger",
       });
   }, [error]);
-  useEffect(() => {
-    if (data) console.log(data);
-  }, [data]);
   return (
     <IonPage>
       <Header pageTitle="Users" backButton={true} />

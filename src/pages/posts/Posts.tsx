@@ -1,6 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import {
   IonBadge,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonItem,
@@ -20,17 +25,24 @@ import Header from "../../components/Header";
 import { showPostsQuantity } from "../../hooks/Post";
 import { User } from "../../models/UserType";
 
-const ALL_USERS = gql`
+const ALL_POSTS = gql`
   query {
-    users {
+    posts {
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
       nodes {
         id
-        name
-        email
-        gender
-        posts {
-          totalCount
+        title
+        body
+        user {
+          id
+          name
         }
+        userId
       }
       totalCount
     }
@@ -38,9 +50,8 @@ const ALL_USERS = gql`
 `;
 
 const Posts: React.FC = () => {
-  const { data, loading, error } = useQuery(ALL_USERS);
+  const { data, loading, error } = useQuery(ALL_POSTS);
   const [present] = useIonToast();
-  const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   useEffect(() => {
     if (error)
       present({
@@ -55,50 +66,19 @@ const Posts: React.FC = () => {
   }, [data]);
   return (
     <IonPage>
-      <Header pageTitle="Users" backButton={true} />
+      <Header pageTitle="Posts" backButton={true} />
       <IonContent fullscreen>
-        <IonList>
-          <IonListHeader className="ion-padding-end">
-            <IonLabel>
-              Users list {data && <span>({data.users.totalCount})</span>}
-            </IonLabel>
-          </IonListHeader>
-          {data &&
-            data.users.nodes.map((user: User, index: number) => {
-              return (
-                <IonItem key={index}>
-                  <IonLabel>
-                    <p>{user.name}</p>
-                    <small>{user.email}</small>
-                  </IonLabel>
-                  <IonBadge slot="end">
-                    {showPostsQuantity(user.posts.totalCount)}
-                  </IonBadge>
-                </IonItem>
-              );
-            })}
-          {loading &&
-            skeleton.map((index: number) => {
-              return (
-                <IonItem key={index}>
-                  <IonLabel>
-                    <p>
-                      <IonSkeletonText
-                        animated={true}
-                        style={{ width: "45%" }}
-                      ></IonSkeletonText>
-                    </p>
-                    <small>
-                      <IonSkeletonText
-                        animated={true}
-                        style={{ width: "80%" }}
-                      ></IonSkeletonText>
-                    </small>
-                  </IonLabel>
-                </IonItem>
-              );
-            })}
-        </IonList>
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Card Title</IonCardTitle>
+            <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+          </IonCardHeader>
+
+          <IonCardContent>
+            Here's a small text description for the card content. Nothing more,
+            nothing less.
+          </IonCardContent>
+        </IonCard>
       </IonContent>
     </IonPage>
   );

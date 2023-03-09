@@ -3,7 +3,7 @@ import { PageInfo } from "./SchemaGQLTypes"
 
 export interface CommentConnection {
     //A list of edges.
-    edges: CommentEdge[];
+    edges?: CommentEdge[];
     //A list of nodes.
     nodes: Comment[];
     //Information to aid in pagination.

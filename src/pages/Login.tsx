@@ -52,8 +52,6 @@ const Home: React.FC = () => {
   //hook used to save user. When data change, if exist data means that the query returned an user.
   useEffect(() => {
     if (data) {
-      console.log(data.users.nodes[0]);
-
       login(data.users.nodes[0] as User);
     }
   }, [data]);
