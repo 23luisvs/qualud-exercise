@@ -31,6 +31,18 @@ const GET_USER = gql`
       name
       email
       gender
+      posts {
+        nodes {
+          id
+        }
+        totalCount
+      }
+      todos {
+        nodes {
+          id
+        }
+        totalCount
+      }
     }
   }
 `;
@@ -43,6 +55,8 @@ const Home: React.FC = () => {
   //hook used to save user. When data change, if exist data means that the query returned an user.
   useEffect(() => {
     if (data) {
+      console.log(data.user);
+
       login(data.user as User);
     }
   }, [data]);
@@ -69,7 +83,7 @@ const Home: React.FC = () => {
     ) {
       getUser({
         variables: {
-          id: dataForm.username.toLowerCase() === "padma" ? 900381 : 900381,
+          id: dataForm.username.toLowerCase() === "padma" ? 902810 : 902810,
         },
       });
     } else {
@@ -139,9 +153,14 @@ const Home: React.FC = () => {
                       <IonNote slot="helper">Enter 6 characters</IonNote>
                       <IonNote slot="error">{errors.password?.message}</IonNote>
                     </IonItem>
-                    <IonButton expand="full" type="submit" disabled={loading}>
-                      {loading && <IonSpinner slot="start" />}
-                      <IonLabel>Log In</IonLabel>
+                    <IonButton
+                      expand="full"
+                      size="large"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading && <IonSpinner name="lines-sharp" />}{" "}
+                      &nbsp;&nbsp;Log In&nbsp;&nbsp;
                     </IonButton>
                   </form>
                 )}
