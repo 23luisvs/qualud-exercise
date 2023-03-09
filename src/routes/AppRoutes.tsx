@@ -5,21 +5,23 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
 import Users from "../pages/users/Users";
+import { useAuth } from "../store/AuthContext";
 
 const AppRoutes: React.FC = () => {
+  const { user } = useAuth();
   return (
     <>
-      <Menu />
+      {user && <Menu />}
       <IonRouterOutlet id="main-content">
         {/* Main routes */}
+        <Route exact path="/">
+          {user ? <Redirect to="/home" /> : <Redirect to="/login" />}
+        </Route>
         <Route exact path="/login">
           <Login />
         </Route>
         <Route exact path="/home">
           <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
         </Route>
 
         {/*Routes for users */}

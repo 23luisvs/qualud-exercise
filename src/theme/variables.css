@@ -2,6 +2,10 @@
 http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
+q-flex{
+  display: flex;  
+}
+
 :root {
   /** primary **/
   --ion-color-primary: #3880ff;

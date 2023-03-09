@@ -40,13 +40,13 @@ const Home: React.FC = () => {
 
   const { user, login } = useAuth();
   const [present] = useIonToast();
+  //hook used to save user. When data change, if exist data means that the query returned an user.
   useEffect(() => {
     if (data) {
-      /*const userL: User = data.user as User;
-      console.log("User: ", userL.name);*/
       login(data.user as User);
     }
   }, [data]);
+  //if exist an error lanch a toast
   useEffect(() => {
     if (error)
       present({
@@ -69,7 +69,7 @@ const Home: React.FC = () => {
     ) {
       getUser({
         variables: {
-          id: dataForm.username.toLowerCase() === "padma" ? 889194 : 892529,
+          id: dataForm.username.toLowerCase() === "padma" ? 900381 : 900381,
         },
       });
     } else {
@@ -140,7 +140,8 @@ const Home: React.FC = () => {
                       <IonNote slot="error">{errors.password?.message}</IonNote>
                     </IonItem>
                     <IonButton expand="full" type="submit" disabled={loading}>
-                      {loading && <IonSpinner />}Log In
+                      {loading && <IonSpinner slot="start" />}
+                      <IonLabel>Log In</IonLabel>
                     </IonButton>
                   </form>
                 )}
