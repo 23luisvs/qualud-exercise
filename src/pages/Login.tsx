@@ -83,7 +83,7 @@ const Home: React.FC = () => {
     ) {
       getUser({
         variables: {
-          id: dataForm.username.toLowerCase() === "padma" ? 902810 : 902810,
+          id: dataForm.username.toLowerCase() === "padma" ? 897852 : 897852,
         },
       });
     } else {
