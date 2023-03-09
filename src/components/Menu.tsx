@@ -4,7 +4,6 @@ import {
   IonTitle,
   IonContent,
   IonMenu,
-  IonList,
   IonItem,
   IonMenuToggle,
   IonButtons,
@@ -12,7 +11,7 @@ import {
   IonButton,
   IonLabel,
 } from "@ionic/react";
-import { close, exitOutline, moonOutline } from "ionicons/icons";
+import { close, exitOutline, moon } from "ionicons/icons";
 import { useAuth } from "../store/AuthContext";
 import { useTheme } from "../store/ThemeContext";
 import MenuItem from "./MenuItem";
@@ -31,7 +30,7 @@ const Menu: React.FC<ContainerProps> = () => {
           </IonTitle>
           <IonButtons slot="end">
             <IonItem lines="none" button onClick={() => setThemeDark(!dark)}>
-              <IonIcon icon={moonOutline}></IonIcon>
+              <IonIcon icon={moon}></IonIcon>
             </IonItem>
             <IonItem lines="none" button>
               <IonMenuToggle>
