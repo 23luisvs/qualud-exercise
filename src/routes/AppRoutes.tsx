@@ -27,6 +27,9 @@ const AppRoutes: React.FC = () => {
       }
     });
   }, []);
+  useEffect(() => {
+    if (!user) navigate.replace("/login");
+  }, [user]);
 
   return (
     <>
