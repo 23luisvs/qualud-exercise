@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'execise.qualud.es',
   appName: 'qualud-exercise',
   webDir: 'build',
   bundledWebRuntime: false

@@ -1,14 +1,28 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
-
-const container = document.getElementById('root');
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
+import { defineCustomElements } from "@ionic/pwa-elements/loader";
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: new HttpLink({ uri: "https://gorest.co.in/public/v2/graphql" }),
+});
+const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>
 );
 
