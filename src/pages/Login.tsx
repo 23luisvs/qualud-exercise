@@ -6,83 +6,72 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonNote,
   IonPage,
-  IonTitle,
-  IonToolbar,
+  IonSpinner,
   useIonToast,
 } from "@ionic/react";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import "./Login.css";
 
-import { User } from "../models/UserType";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../store/AuthContext";
-import {
-  fetchUser,
-  LoginFormData,
-  loginSchema,
-} from "../hooks/LoginController";
+import { LoginFormData, loginSchema } from "../hooks/LoginController";
+import { User } from "../models/UserType";
 
-const ALL_USERS = gql`
-  query {
-    users {
-      nodes {
-        id
-        name
-      }
-      totalCount
+const GET_USER = gql`
+  query ($id: ID!) {
+    user(id: $id) {
+      id
+      name
+      email
+      gender
     }
   }
 `;
 
 const Home: React.FC = () => {
-  /*const result = useQuery(ALL_USERS);
-  console.log(result);
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };*/
+  const [getUser, { loading, error, data }] = useLazyQuery(GET_USER);
+
   const { user, login } = useAuth();
-  //form schema handler
-  const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
+  useEffect(() => {
+    if (data) {
+      /*const userL: User = data.user as User;
+      console.log("User: ", userL.name);*/
+      login(data.user as User);
+    }
+  }, [data]);
+  useEffect(() => {
+    if (error)
+      present({
+        message: error + "",
+        duration: 2000,
+        position: "top",
+        color: "danger",
+      });
+  }, [error]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({ resolver: yupResolver(loginSchema) });
-  const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
+  const onSubmit = (dataForm: LoginFormData) => {
     if (
-      data.username.toLowerCase() === "deepesh" ||
-      data.username.toLowerCase() === "shanti"
+      dataForm.username.toLowerCase() === "padma" ||
+      dataForm.username.toLowerCase() === "saini"
     ) {
-      //let userLogin: User;
-      try {
-        const res=await fetchUser(
-          data.username.toLowerCase() === "deepesh" ? 888662 : 888659
-        )
-        console.log(res);
-        
-
-        //let userLogin: User = await res.data as User;
-      } catch (err) {
-        console.log("==================================error");
-
-        present({
-          message: err + "",
-          duration: 2500,
-          position: "top",
-          color: "danger",
-        });
-      }
+      getUser({
+        variables: {
+          id: dataForm.username.toLowerCase() === "padma" ? 889194 : 892529,
+        },
+      });
     } else {
       console.log("no user exist");
       present({
@@ -99,56 +88,72 @@ const Home: React.FC = () => {
       <IonContent fullscreen>
         <div className="container">
           <div className=" max-w500 ">
-            <div className="ion-margin">
-              <p>
-                Use 'Deepesh' or 'Shanti' in user field and anything for the
-                password field.
-              </p>
-            </div>
+            {!user && (
+              <div className="ion-margin">
+                <p>
+                  Use 'Padma' or 'Saini' in user field and anything for the
+                  password field.
+                </p>
+              </div>
+            )}
 
             <IonCard className="ion-marginion-margin">
               <IonCardHeader>
                 <IonCardTitle>Log In</IonCardTitle>
                 <IonCardSubtitle>
-                  You must be log in to use this app!
+                  {user
+                    ? "Welcome " + user.name
+                    : "You must be log in to use this app!"}
                 </IonCardSubtitle>
               </IonCardHeader>
 
               <IonCardContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <IonItem
-                    fill="outline"
-                    className={`ion-margin-bottom ${
-                      !errors.username && "ion-valid"
-                    } ${errors.username && "ion-invalid"}`}
-                  >
-                    <IonLabel position="floating">User</IonLabel>
-                    <IonInput
-                      placeholder="Enter user"
-                      {...register("username")}
-                    ></IonInput>
-                    <IonNote slot="helper">Enter a valid username</IonNote>
-                    <IonNote slot="error">{errors.username?.message}</IonNote>
-                  </IonItem>
-                  <IonItem
-                    fill="outline"
-                    className={`ion-margin-bottom ${
-                      !errors.password && "ion-valid"
-                    } ${errors.password && "ion-invalid"}`}
-                  >
-                    <IonLabel position="floating">Password</IonLabel>
-                    <IonInput
-                      type="password"
-                      placeholder="Enter password"
-                      {...register("password")}
-                    ></IonInput>
-                    <IonNote slot="helper">Enter 6 characters</IonNote>
-                    <IonNote slot="error">{errors.password?.message}</IonNote>
-                  </IonItem>
-                  <IonButton expand="full" type="submit">
-                    Log In
-                  </IonButton>
-                </form>
+                {!user && (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <IonItem
+                      fill="outline"
+                      className={`ion-margin-bottom ${
+                        !errors.username && "ion-valid"
+                      } ${errors.username && "ion-invalid"}`}
+                    >
+                      <IonLabel position="floating">User</IonLabel>
+                      <IonInput
+                        placeholder="Enter user"
+                        {...register("username")}
+                      ></IonInput>
+                      <IonNote slot="helper">Enter a valid username</IonNote>
+                      <IonNote slot="error">{errors.username?.message}</IonNote>
+                    </IonItem>
+                    <IonItem
+                      fill="outline"
+                      className={`ion-margin-bottom ${
+                        !errors.password && "ion-valid"
+                      } ${errors.password && "ion-invalid"}`}
+                    >
+                      <IonLabel position="floating">Password</IonLabel>
+                      <IonInput
+                        type="password"
+                        placeholder="Enter password"
+                        {...register("password")}
+                      ></IonInput>
+                      <IonNote slot="helper">Enter 6 characters</IonNote>
+                      <IonNote slot="error">{errors.password?.message}</IonNote>
+                    </IonItem>
+                    <IonButton expand="full" type="submit" disabled={loading}>
+                      {loading && <IonSpinner />}Log In
+                    </IonButton>
+                  </form>
+                )}
+                {user && (
+                  <div>
+                    <p>
+                      Email: <strong>{user.email}</strong>
+                    </p>
+                    <p>
+                      Gender: <strong>{user.gender}</strong>
+                    </p>
+                  </div>
+                )}
               </IonCardContent>
             </IonCard>
           </div>

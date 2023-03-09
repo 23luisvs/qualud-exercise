@@ -10,6 +10,7 @@ import {
   IonButtons,
   IonIcon,
   IonButton,
+  IonLabel,
 } from "@ionic/react";
 import { close, exitOutline, moonOutline } from "ionicons/icons";
 import { useAuth } from "../store/AuthContext";
@@ -19,19 +20,17 @@ import MenuItem from "./MenuItem";
 interface ContainerProps {}
 
 const Menu: React.FC<ContainerProps> = () => {
-  const {dark,setThemeDark} = useTheme();
-  const {user}=useAuth();
+  const { dark, setThemeDark } = useTheme();
+  const { user, logout } = useAuth();
   return (
     <IonMenu contentId="main-content">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{user?.name}</IonTitle>
+          <IonTitle>
+            <IonLabel>{user?.name}</IonLabel>
+          </IonTitle>
           <IonButtons slot="end">
-            <IonItem
-              lines="none"
-              button
-              onClick={() => setThemeDark(!dark)}
-            >
+            <IonItem lines="none" button onClick={() => setThemeDark(!dark)}>
               <IonIcon icon={moonOutline}></IonIcon>
             </IonItem>
             <IonItem lines="none" button>
@@ -48,7 +47,7 @@ const Menu: React.FC<ContainerProps> = () => {
           <MenuItem link="/users">Users</MenuItem>
           <MenuItem link="/posts">Posts</MenuItem>
           <div className="ion-text-end ion-padding">
-            <IonButton onClick={() => console.log("Sign out")}>
+            <IonButton onClick={() => logout()}>
               Sign Out
               <IonIcon slot="end" icon={exitOutline}></IonIcon>
             </IonButton>
