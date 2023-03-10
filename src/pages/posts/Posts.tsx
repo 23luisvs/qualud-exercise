@@ -9,6 +9,8 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonFooter,
   IonHeader,
   IonIcon,
@@ -17,6 +19,8 @@ import {
   IonList,
   IonListHeader,
   IonPage,
+  IonSelect,
+  IonSelectOption,
   IonSkeletonText,
   IonText,
   IonTitle,
@@ -24,45 +28,25 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { add, chatboxEllipses, eye, funnel } from "ionicons/icons";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import ExploreContainer from "../../components/ExploreContainer";
 import Header from "../../components/Header";
-import { showCommentsQuantity, showPostsQuantity } from "../../hooks/Post";
+import PostsSkeletons from "../../components/posts/PostsSkeletons";
+import {
+  ALL_POSTS,
+  showCommentsQuantity,
+  showPostsQuantity,
+} from "../../hooks/PostController";
 import { Post } from "../../models/PostTypes";
 import { User } from "../../models/UserType";
 import { useAuth } from "../../store/AuthContext";
 import "./Posts.css";
 
-const ALL_POSTS = gql`
-  query {
-    posts {
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-      nodes {
-        id
-        title
-        body
-        user {
-          id
-          name
-        }
-        userId
-        comments {
-          totalCount
-        }
-      }
-      totalCount
-    }
-  }
-`;
-
 const Posts: React.FC = () => {
   const { user } = useAuth();
-  const { data, loading, error } = useQuery(ALL_POSTS);
+  const { data, loading, error, refetch } = useQuery(ALL_POSTS);
+  const [authors, setAutors] = useState<User[]>([]);
+  const selectAuthor = useRef<HTMLIonSelectElement>(null);
   const [present] = useIonToast();
   useEffect(() => {
     if (error)
@@ -74,13 +58,25 @@ const Posts: React.FC = () => {
       });
   }, [error]);
   useEffect(() => {
-    if (data) console.log(data);
+    if (data) {
+      console.log(data);
+      let tempAuthors: User[] = [];
+      //get Authors for the filter by authors
+      data.posts.nodes.map((post: Post) => {
+        tempAuthors.push(post.user);
+      });
+      setAutors(tempAuthors);
+    }
   }, [data]);
+  useEffect(() => {
+    console.log(selectAuthor.current?.value);
+  }, [selectAuthor]);
   return (
     <IonPage>
       <Header pageTitle="Posts" backButton={true} />
       <IonContent fullscreen>
         {data &&
+          !loading &&
           data.posts.nodes.map((post: Post, index: number) => {
             return (
               <IonCard key={index}>
@@ -93,7 +89,6 @@ const Posts: React.FC = () => {
                 <IonCardContent>
                   <div className="ion-text-justify">{post.body}</div>
                   <div className="ion-text-end">
-                    {/*showCommentsQuantity(post.comments?.totalCount)*/}
                     {
                       <IonText className="q-flex ion-justify-content-end ion-align-items-center">
                         <IonLabel className="mr-5">
@@ -114,22 +109,37 @@ const Posts: React.FC = () => {
               </IonCard>
             );
           })}
+        {loading && <PostsSkeletons />}
+        <IonFab slot="fixed" vertical="bottom" horizontal="end" edge={true}>
+          <IonFabButton>
+            <IonIcon icon={add}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
       <IonFooter>
-        <IonToolbar>
-          <IonButton slot="start" color="primary">
-            <IonLabel>Add</IonLabel> <IonIcon slot="start" icon={add} />
-          </IonButton>
+        <IonToolbar className="ion-padding-start ion-padding-end">
           <IonButtons color="medium">
             <IonItem lines="none">
               <IonIcon slot="start" icon={funnel} />
-              <IonLabel>Filters:</IonLabel>
             </IonItem>
-            <IonButton color="primary">
-              <IonLabel>Author</IonLabel>
-            </IonButton>
+            <IonList>
+              <IonItem>
+                <IonSelect
+                  ref={selectAuthor}
+                  interface="action-sheet"
+                  placeholder="Author"
+                >
+                  <IonSelectOption value="0">No filter</IonSelectOption>
+                  <IonSelectOption value="oranges">Oranges</IonSelectOption>
+                  <IonSelectOption value="bananas">Bananas</IonSelectOption>
+                </IonSelect>
+              </IonItem>
+            </IonList>
             <IonButton color="primary">
               <IonLabel>My posts</IonLabel>
+            </IonButton>
+            <IonButton color="primary">
+              <IonLabel>All</IonLabel>
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -137,6 +147,22 @@ const Posts: React.FC = () => {
           <IonItem lines="none">
             {data && showPostsQuantity(data.posts.totalCount)}
           </IonItem>
+          <IonButtons slot="end">
+            <IonButton
+              disabled={!data || !data.posts.pageInfo.hasPreviousPage}
+              onClick={() =>
+                refetch({ before: data.posts.pageInfo.startCursor })
+              }
+            >
+              Prev
+            </IonButton>
+            <IonButton
+              disabled={!data || !data.posts.pageInfo.hasNextPage}
+              onClick={() => refetch({ after: data.posts.pageInfo.endCursor })}
+            >
+              Next
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonFooter>
     </IonPage>

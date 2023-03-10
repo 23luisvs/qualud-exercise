@@ -1,7 +1,7 @@
 import React from "react";
 import { createContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { AuthContextType } from "../models/authContextType";
+import { AuthContextType } from "../models/ContextAuthType";
 import { User } from "../models/UserType";
 
 export const AuthContext = createContext<AuthContextType>({

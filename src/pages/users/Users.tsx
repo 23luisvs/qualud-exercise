@@ -1,46 +1,27 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   IonBadge,
+  IonButton,
+  IonButtons,
   IonContent,
-  IonHeader,
+  IonFooter,
   IonItem,
   IonLabel,
   IonList,
-  IonListHeader,
   IonPage,
   IonSkeletonText,
-  IonText,
-  IonTitle,
   IonToolbar,
   useIonToast,
 } from "@ionic/react";
 import { useEffect } from "react";
-import ExploreContainer from "../../components/ExploreContainer";
 import Header from "../../components/Header";
-import { showPostsQuantity } from "../../hooks/Post";
+import { ALL_USERS, showUsersQuantity } from "../../hooks/LoginController";
+import { showPostsQuantity } from "../../hooks/PostController";
 import { User } from "../../models/UserType";
 
-const ALL_USERS = gql`
-  query {
-    users {
-      nodes {
-        id
-        name
-        email
-        gender
-        posts {
-          totalCount
-        }
-      }
-      totalCount
-    }
-  }
-`;
-
 const Users: React.FC = () => {
-  const { data, loading, error } = useQuery(ALL_USERS);
+  const { data, loading, error, refetch } = useQuery(ALL_USERS);
   const [present] = useIonToast();
-  const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   useEffect(() => {
     if (error)
       present({
@@ -55,11 +36,6 @@ const Users: React.FC = () => {
       <Header pageTitle="Users" backButton={true} />
       <IonContent fullscreen>
         <IonList>
-          <IonListHeader className="ion-padding-end">
-            <IonLabel>
-              Users list {data && <span>({data.users.totalCount})</span>}
-            </IonLabel>
-          </IonListHeader>
           {data &&
             data.users.nodes.map((user: User, index: number) => {
               return (
@@ -75,7 +51,7 @@ const Users: React.FC = () => {
               );
             })}
           {loading &&
-            skeleton.map((index: number) => {
+            "1111111111".split("").map((ele: string, index: number) => {
               return (
                 <IonItem key={index}>
                   <IonLabel>
@@ -97,6 +73,29 @@ const Users: React.FC = () => {
             })}
         </IonList>
       </IonContent>
+      <IonFooter>
+        <IonToolbar>
+          <IonItem lines="none">
+            {data && showUsersQuantity(data.users.totalCount)}
+          </IonItem>
+          <IonButtons slot="end">
+            <IonButton
+              disabled={!data || !data.users.pageInfo.hasPreviousPage}
+              onClick={() =>
+                refetch({ before: data.users.pageInfo.startCursor })
+              }
+            >
+              Prev
+            </IonButton>
+            <IonButton
+              disabled={!data || !data.users.pageInfo.hasNextPage}
+              onClick={() => refetch({ after: data.users.pageInfo.endCursor })}
+            >
+              Next
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };
