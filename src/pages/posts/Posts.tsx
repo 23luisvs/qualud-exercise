@@ -1,8 +1,7 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   IonAccordion,
   IonAccordionGroup,
-  IonBadge,
   IonButton,
   IonButtons,
   IonCard,
@@ -11,26 +10,19 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonFab,
-  IonFabButton,
   IonFooter,
-  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
-  IonListHeader,
   IonPage,
   IonSelect,
   IonSelectOption,
-  IonSkeletonText,
   IonText,
-  IonTitle,
   IonToolbar,
   useIonToast,
 } from "@ionic/react";
 import {
-  add,
   chatboxEllipses,
   chevronBack,
   chevronForward,
@@ -38,19 +30,18 @@ import {
   funnel,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import ExploreContainer from "../../components/ExploreContainer";
 import Header from "../../components/Header";
 import PostsSkeletons from "../../components/posts/PostsSkeletons";
 import { ALL_USERS, GET_USER_POSTS_BY_ID } from "../../hooks/UserController";
 import {
   ALL_POSTS,
-  showCommentsQuantity,
   showPostsQuantity,
 } from "../../hooks/PostController";
 import { Post, PostConnection } from "../../models/PostTypes";
 import { User } from "../../models/UserType";
 import { useAuth } from "../../store/AuthContext";
 import "./Posts.css";
+import AddPost from "../../components/posts/AddPost";
 
 const Posts: React.FC = () => {
   const { user } = useAuth();
@@ -111,7 +102,7 @@ const Posts: React.FC = () => {
   };
   // handler to the button filter ALL POSTS
   const allPostsFilterHandler = () => {
-    if(selectedAuthor.current)selectedAuthor.current.selectedText="";
+    if (selectedAuthor.current) selectedAuthor.current.selectedText = "";
     setTypeOfPostsList(0);
     setPosts(allPosts.data.posts as PostConnection);
   };
@@ -191,11 +182,7 @@ const Posts: React.FC = () => {
           )}
         </div>
 
-        <IonFab slot="fixed" vertical="bottom" horizontal="start">
-          <IonFabButton size="small">
-            <IonIcon icon={add}></IonIcon>
-          </IonFabButton>
-        </IonFab>
+        <AddPost />
       </IonContent>
       <IonFooter>
         <IonToolbar className="">

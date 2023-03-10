@@ -12,6 +12,11 @@ export const showCommentsQuantity = (totalComments: number) => {
     }
     return totalComments + " comments";
 };
+export const getMessageOfListPosts=(type:number)=>{
+  if(type===1)return "List of my posts";
+  
+  return "List of all Posts.";
+}
 export const ALL_POSTS = gql`
   query($after: String,$before: String) {
     posts(after:$after,before:$before) {
