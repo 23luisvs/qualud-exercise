@@ -29,7 +29,14 @@ import {
   IonToolbar,
   useIonToast,
 } from "@ionic/react";
-import { add, chatboxEllipses, eye, funnel } from "ionicons/icons";
+import {
+  add,
+  chatboxEllipses,
+  chevronBack,
+  chevronForward,
+  eye,
+  funnel,
+} from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import ExploreContainer from "../../components/ExploreContainer";
 import Header from "../../components/Header";
@@ -47,12 +54,19 @@ import "./Posts.css";
 
 const Posts: React.FC = () => {
   const { user } = useAuth();
+  /* GraphQL requests */
   const allPosts = useQuery(ALL_POSTS);
   const selectListAuthors = useQuery(ALL_USERS);
   const [getUserPosts, userAuthorPosts] = useLazyQuery(GET_USER_POSTS_BY_ID);
   //posts to show (Can be: all posts, my posts or user filter posts)
   const [posts, setPosts] = useState<PostConnection | null>(null);
-  const selectAuthor = useRef<HTMLIonSelectElement>(null);
+  /*
+  0: List all posts.
+  1: List user authenticated posts.
+  2: List user filter posts.
+   */
+  const [typeOfPostsList, setTypeOfPostsList] = useState(0);
+  const selectedAuthor = useRef<HTMLIonSelectElement>(null);
   const [present] = useIonToast();
   //execute when change data or cuando se reciben datos de GET_USER_POSTS_BY_ID
   useEffect(() => {
@@ -77,45 +91,106 @@ const Posts: React.FC = () => {
         position: "top",
         color: "danger",
       });
-  }, [allPosts.error]);
+    if (userAuthorPosts.error)
+      present({
+        message: userAuthorPosts.error + "",
+        duration: 2000,
+        position: "top",
+        color: "danger",
+      });
+  }, [allPosts.error, userAuthorPosts.error]);
+  // handler to the button filter MY POSTS
+  const myPostsFilterHandler = () => {
+    setTypeOfPostsList(1);
+    if (userAuthorPosts.data && userAuthorPosts.data.user.id === user?.id) {
+      setPosts(userAuthorPosts.data.user.posts);
+    } else {
+      setPosts(null);
+      getUserPosts({ variables: { id: user?.id } });
+    }
+  };
+  // handler to the button filter ALL POSTS
+  const allPostsFilterHandler = () => {
+    if(selectedAuthor.current)selectedAuthor.current.selectedText="";
+    setTypeOfPostsList(0);
+    setPosts(allPosts.data.posts as PostConnection);
+  };
+  // handler to the Select filter User Author
+  const selectedAuthorFilterHandler = () => {
+    setTypeOfPostsList(2);
+    if (
+      userAuthorPosts.data &&
+      userAuthorPosts.data.user.id === +selectedAuthor.current?.value
+    ) {
+      setPosts(userAuthorPosts.data.user.posts);
+    } else {
+      setPosts(null);
+      getUserPosts({
+        variables: { id: +selectedAuthor.current?.value },
+      });
+    }
+  };
   return (
     <IonPage>
       <Header pageTitle="Posts" backButton={true} />
       <IonContent fullscreen>
-        {posts &&
-          !allPosts.loading &&
-          !userAuthorPosts.loading &&
-          posts.nodes.map((post: Post, index: number) => {
-            return (
-              <IonCard key={index}>
-                <IonCardHeader>
-                  <IonCardTitle>{post.title}</IonCardTitle>
-                  <IonCardSubtitle>
-                    {"Author: " + post.user.name}
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <div className="ion-text-justify">{post.body}</div>
-                  <div className="q-flex ion-justify-content-end ion-align-items-center">
-                    {user?.id === post.userId &&
-                      post.comments?.totalCount > 0 && (
-                        <IonButton className="ion-padding-end" size="small">
-                          <IonIcon slot="start" icon={eye} />
-                          <IonLabel>Show</IonLabel>
-                        </IonButton>
-                      )}
-                    <IonText className="q-flex ion-justify-content-end ion-align-items-center">
-                      <IonLabel className="mr-5">
-                        {post.comments?.totalCount}
-                      </IonLabel>
-                      <IonIcon className="mr-5" icon={chatboxEllipses} />
-                    </IonText>
-                  </div>
-                </IonCardContent>
-              </IonCard>
-            );
-          })}
-        {(allPosts.loading || userAuthorPosts.loading) && <PostsSkeletons />}
+        <div className="ion-padding">
+          <h2>
+            {typeOfPostsList === 0
+              ? "List of all posts."
+              : typeOfPostsList === 1
+              ? "List of my posts"
+              : "Posts of " +
+                selectListAuthors.data.users.nodes.find((user: User) => {
+                  return user.id === selectedAuthor.current?.value;
+                }).name +
+                "."}
+          </h2>
+          {posts &&
+            !allPosts.loading &&
+            !userAuthorPosts.loading &&
+            posts.nodes.map((post: Post, index: number) => {
+              return (
+                <IonCard key={index}>
+                  <IonCardHeader>
+                    <IonCardTitle>{post.title}</IonCardTitle>
+                    <IonCardSubtitle>
+                      {"Author: " + post.user.name}
+                    </IonCardSubtitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <div className="ion-text-justify">{post.body}</div>
+                    <div className="q-flex ion-justify-content-end ion-align-items-center">
+                      {user?.id === post.userId &&
+                        post.comments?.totalCount > 0 && (
+                          <IonButton className="ion-padding-end" size="small">
+                            <IonIcon slot="start" icon={eye} />
+                            <IonLabel>Show</IonLabel>
+                          </IonButton>
+                        )}
+                      <IonText className="q-flex ion-justify-content-end ion-align-items-center">
+                        <IonLabel className="mr-5">
+                          {post.comments?.totalCount}
+                        </IonLabel>
+                        <IonIcon className="mr-5" icon={chatboxEllipses} />
+                      </IonText>
+                    </div>
+                  </IonCardContent>
+                </IonCard>
+              );
+            })}
+          {posts && posts.nodes.length === 0 && (
+            <IonCard>
+              <IonCardContent>
+                <p>List of posts is empty.</p>
+              </IonCardContent>
+            </IonCard>
+          )}
+          {(allPosts.loading || userAuthorPosts.loading || posts === null) && (
+            <PostsSkeletons />
+          )}
+        </div>
+
         <IonFab slot="fixed" vertical="bottom" horizontal="start">
           <IonFabButton size="small">
             <IonIcon icon={add}></IonIcon>
@@ -134,13 +209,14 @@ const Posts: React.FC = () => {
                 <IonButtons className="ion-padding q-flex ion-justify-content-around">
                   <IonButton
                     color="primary"
-                    onClick={() =>
-                      getUserPosts({ variables: { id: user?.id } })
-                    }
+                    onClick={() => myPostsFilterHandler()}
                   >
                     <IonLabel>My posts</IonLabel>
                   </IonButton>
-                  <IonButton color="primary" onClick={() => allPosts.refetch()}>
+                  <IonButton
+                    color="primary"
+                    onClick={() => allPostsFilterHandler()}
+                  >
                     <IonLabel>All posts</IonLabel>
                   </IonButton>
                 </IonButtons>
@@ -148,14 +224,11 @@ const Posts: React.FC = () => {
                   <IonItem>
                     <IonLabel>Show posts by author</IonLabel>
                     <IonSelect
-                      ref={selectAuthor}
+                      ref={selectedAuthor}
+                      onSelect={() => console.log("salest")}
                       interface="action-sheet"
                       placeholder="Select an author tu show his posts."
-                      onIonChange={() => {
-                        getUserPosts({
-                          variables: { id: +selectAuthor.current?.value },
-                        });
-                      }}
+                      onIonChange={() => selectedAuthorFilterHandler()}
                     >
                       {selectListAuthors.data &&
                         selectListAuthors.data.users.nodes.map(
@@ -181,27 +254,37 @@ const Posts: React.FC = () => {
           <IonButtons slot="end">
             <IonButton
               disabled={
-                !allPosts.data || !allPosts.data.posts.pageInfo.hasPreviousPage
+                !allPosts.data ||
+                !allPosts.data.posts.pageInfo.hasPreviousPage ||
+                typeOfPostsList !== 0 ||
+                !posts
               }
-              onClick={() =>
+              onClick={() => {
+                setPosts(null);
                 allPosts.refetch({
                   before: allPosts.data.posts.pageInfo.startCursor,
-                })
-              }
+                });
+              }}
             >
-              Prev
+              <IonIcon slot="start" icon={chevronBack} />
+              <IonLabel>Prev</IonLabel>
             </IonButton>
             <IonButton
               disabled={
-                !allPosts.data || !allPosts.data.posts.pageInfo.hasNextPage
+                !allPosts.data ||
+                !allPosts.data.posts.pageInfo.hasNextPage ||
+                typeOfPostsList !== 0 ||
+                !posts
               }
-              onClick={() =>
+              onClick={() => {
+                setPosts(null);
                 allPosts.refetch({
                   after: allPosts.data.posts.pageInfo.endCursor,
-                })
-              }
+                });
+              }}
             >
-              Next
+              <IonLabel>Next</IonLabel>{" "}
+              <IonIcon slot="end" icon={chevronForward} />
             </IonButton>
           </IonButtons>
         </IonToolbar>

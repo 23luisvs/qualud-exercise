@@ -47,26 +47,13 @@ const PostsSkeletons = () => {
                   animated={true}
                   style={{ width: "100" }}
                 ></IonSkeletonText>
-                <IonSkeletonText
-                  animated={true}
-                  style={{ width: "100" }}
-                ></IonSkeletonText>
-                <IonSkeletonText
-                  animated={true}
-                  style={{ width: "100" }}
-                ></IonSkeletonText>
               </div>
               <div className="ion-text-end">
-                {
-                  <IonText className="q-flex ion-justify-content-end ion-align-items-center">
-                    <IonLabel className="mr-5">
-                      <IonSkeletonText
-                        animated={true}
-                        style={{ width: "5%" }}
-                      ></IonSkeletonText>
-                    </IonLabel>
-                  </IonText>
-                }
+                <IonSkeletonText
+                  slot="end"
+                  animated={true}
+                  style={{ width: "10%" }}
+                ></IonSkeletonText>
               </div>
             </IonCardContent>
           </IonCard>
