@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import { useEffect } from "react";
 import Header from "../../components/Header";
-import { ALL_USERS, showUsersQuantity } from "../../hooks/LoginController";
+import { ALL_USERS, showUsersQuantity } from "../../hooks/UserController";
 import { showPostsQuantity } from "../../hooks/PostController";
 import { User } from "../../models/UserType";
 

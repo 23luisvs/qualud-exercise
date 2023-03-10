@@ -1,3 +1,4 @@
+import { PostConnection } from "./PostTypes";
 import { PageInfo } from "./SchemaGQLTypes";
 
 export interface User {
@@ -5,10 +6,10 @@ export interface User {
   name: string;
   email: string;
   gender: string;
-  posts:{nodes:{id:number}[],totalCount:number};
+  posts:PostConnection;
   todos:{nodes:{id:number}[],totalCount:number}
 }
-interface PostConnection {
+ interface UserConnection {
   edges?: UserEdge[];
   nodes: User[];
   pageInfo: PageInfo;

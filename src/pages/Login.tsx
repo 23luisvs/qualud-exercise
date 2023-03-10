@@ -14,35 +14,19 @@ import {
   IonSpinner,
   useIonToast,
 } from "@ionic/react";
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import "./Login.css";
 
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../store/AuthContext";
-import { LoginFormData, loginSchema } from "../hooks/LoginController";
+import {
+  GET_FIRST_USER,
+  LoginFormData,
+  loginSchema,
+} from "../hooks/LoginController";
 import { User } from "../models/UserType";
-
-const GET_FIRST_USER = gql`
-  query {
-    users(first: 1) {
-      nodes {
-        id
-        name
-        email
-        gender
-        posts {
-          totalCount
-        }
-        todos {
-          totalCount
-        }
-      }
-      totalCount
-    }
-  }
-`;
 
 const Home: React.FC = () => {
   const [getUser, { loading, error, data }] = useLazyQuery(GET_FIRST_USER);
