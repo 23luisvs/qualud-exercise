@@ -5,9 +5,9 @@ export interface CommentConnection {
     //A list of edges.
     edges?: CommentEdge[];
     //A list of nodes.
-    nodes: Comment[];
+    nodes?: Comment[];
     //Information to aid in pagination.
-    pageInfo: PageInfo;
+    pageInfo?: PageInfo;
     //Total count of items
     totalCount: number;
 }

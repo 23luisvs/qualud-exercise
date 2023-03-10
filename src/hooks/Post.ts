@@ -4,3 +4,9 @@ export const showPostsQuantity = (totalPost: number) => {
     }
     return totalPost + " posts";
 };
+export const showCommentsQuantity = (totalComments: number) => {
+    if (totalComments === 1) {
+        return totalComments + " comment";
+    }
+    return totalComments + " comments";
+};

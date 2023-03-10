@@ -11,7 +11,7 @@ export interface PostConnection {
 }
 export interface Post {
     body: string;
-    comments?: CommentConnection;
+    comments: CommentConnection;
     id: number;
     title: string;
     user: User;
