@@ -35,7 +35,7 @@ import {
   eye,
   funnel,
 } from "ionicons/icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Header from "../../components/Header";
 import PostsSkeletons from "../../components/posts/PostsSkeletons";
 import { ALL_USERS, GET_USER_POSTS_BY_ID } from "../../hooks/UserController";
@@ -54,6 +54,7 @@ const Posts: React.FC = () => {
   const selectListAuthors = useQuery(ALL_USERS);
   const [getUserPosts, userAuthorPosts] = useLazyQuery(GET_USER_POSTS_BY_ID);
   //posts to show (Can be: all posts, my posts or user filter posts)
+  //Of type PostConnection | null
   const [posts, setPosts] = useState<PostConnection | null>(null);
   /*
   0: List all posts.
@@ -69,7 +70,7 @@ const Posts: React.FC = () => {
       console.log("All", allPosts);
       setPosts(allPosts.data.posts as PostConnection);
     }
-  }, [allPosts.data]);
+  }, [allPosts]);
   //execute cuando se reciben datos de GET_USER_POSTS_BY_ID
   useEffect(() => {
     if (userAuthorPosts.data) {
@@ -88,7 +89,7 @@ const Posts: React.FC = () => {
         position: "top",
         color: "danger",
       });
-  }, [allPosts.error, userAuthorPosts.error]);
+  }, [allPosts.error, userAuthorPosts.error, present]);
   // handler to the button filter MY POSTS
   const myPostsFilterHandler = () => {
     setTypeOfPostsList(1);
@@ -99,11 +100,18 @@ const Posts: React.FC = () => {
       getUserPosts({ variables: { id: user?.id } });
     }
   };
-  const myPostsAfterCreateHandler = () => {
+  const myPostsAfterCreateHandler = useCallback(async () => {
     setTypeOfPostsList(1);
     setPosts(null);
-    getUserPosts({ variables: { id: user?.id } });
-  };
+    try {
+      await getUserPosts({
+        variables: { id: user?.id },
+        fetchPolicy: "no-cache",
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }, [getUserPosts, user?.id]);
   // handler to the button filter ALL POSTS
   const allPostsFilterHandler = () => {
     if (selectedAuthor.current) selectedAuthor.current.selectedText = "";
@@ -125,23 +133,28 @@ const Posts: React.FC = () => {
       });
     }
   };
-  //refresh data swipe down
+  //refresh data, swipe down
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
     try {
       if (typeOfPostsList === 0) {
-        await allPosts.refetch();
+        await allPosts.refetch({ fetchPolicy: "no-cache" });
       } else if (typeOfPostsList === 1) {
-        await getUserPosts({ variables: { id: user?.id } });
+        await getUserPosts({
+          variables: { id: user?.id },
+          fetchPolicy: "no-cache",
+        });
       } else {
         await getUserPosts({
-          variables: { id: +selectedAuthor.current?.value },
+          variables: {
+            id: +selectedAuthor.current?.value,
+            fetchPolicy: "no-cache",
+          },
         });
       }
-      event.detail.complete();
     } catch (err) {
       console.log(err);
-      event.detail.complete();
     }
+    event.detail.complete();
   };
   return (
     <IonPage>

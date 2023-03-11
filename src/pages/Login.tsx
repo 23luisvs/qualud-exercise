@@ -38,7 +38,7 @@ const Login: React.FC = () => {
     if (data) {
       login(data.users.nodes[0] as User);
     }
-  }, [data]);
+  }, [data, login]);
   //if exist an error lanch a toast
   useEffect(() => {
     if (error)
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
         position: "top",
         color: "danger",
       });
-  }, [error]);
+  }, [error,present]);
 
   const {
     register,

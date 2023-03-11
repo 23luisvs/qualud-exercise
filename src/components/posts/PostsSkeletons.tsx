@@ -5,8 +5,6 @@ import {
   IonSkeletonText,
   IonCardSubtitle,
   IonCardContent,
-  IonText,
-  IonLabel,
 } from "@ionic/react";
 
 const PostsSkeletons = () => {

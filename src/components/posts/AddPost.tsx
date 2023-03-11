@@ -34,7 +34,7 @@ interface Props {
 }
 const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
   const { user } = useAuth();
-  const [createPost, { data, loading, error }] = useMutation(CREATE_POST);
+  const [createPost, { data, loading }] = useMutation(CREATE_POST);
   const modal = useRef<HTMLIonModalElement>(null);
   const {
     register,
@@ -55,7 +55,7 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
       myPostsAfterCreateHandler();
       modal.current?.dismiss();
     }
-  },[data]);
+  },[data,myPostsAfterCreateHandler]);
 
   return (
     <>
@@ -100,14 +100,6 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
               <IonNote slot="helper">Required.</IonNote>
               <IonNote slot="error">{errors.body?.message}</IonNote>
             </IonItem>
-            <IonButton
-              slot="end"
-              type="submit"
-              form="create-post-form"
-              color="primary"
-            >
-              Confirm
-            </IonButton>
           </form>
           <IonLoading
             cssClass="my-custom-class"

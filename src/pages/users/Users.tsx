@@ -30,7 +30,7 @@ const Users: React.FC = () => {
         position: "top",
         color: "danger",
       });
-  }, [error]);
+  }, [error,present]);
   return (
     <IonPage>
       <Header pageTitle="Users" backButton={true} />

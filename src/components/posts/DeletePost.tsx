@@ -7,12 +7,10 @@ import {
   useIonActionSheet,
 } from "@ionic/react";
 import { trash } from "ionicons/icons";
-import { useEffect } from "react";
-import { CREATE_POST, DELETE_POST } from "../../hooks/PostController";
-import { useAuth } from "../../store/AuthContext";
+import { DELETE_POST } from "../../hooks/PostController";
 import { Haptics } from "@capacitor/haptics";
 import "./DeletePost.css";
-import { Post, PostConnection } from "../../models/PostTypes";
+import { PostConnection } from "../../models/PostTypes";
 
 interface Props {
   postId: number;
@@ -21,20 +19,27 @@ interface Props {
   setPosts: React.Dispatch<React.SetStateAction<PostConnection | null>>;
 }
 const DeletePost: React.FC<Props> = ({ postId, index, posts, setPosts }) => {
-  const { user } = useAuth();
-  const [deletePost, { data, loading, error }] = useMutation(DELETE_POST);
+  const [deletePost, { loading }] = useMutation(DELETE_POST);
   const [present] = useIonActionSheet();
   console.log(postId);
-  
 
-  //if create post success close modal and reload user posts
-  useEffect(() => {
-    if (data && !error) {
-      console.log("deleted", data.post.id);
-      let templist = posts.nodes;
-      setPosts({ ...posts, nodes: templist.splice(index, 1) });
-    }
-  }, [data]);
+  //delete post from list of posts
+  const deletePostFromList = () => {
+    let nodes = posts.nodes;
+    nodes.splice(index, 1);
+    console.log("After splice: ", {
+      ...posts,
+      nodes: nodes,
+      totalCount: posts.totalCount - 1,
+    });
+
+    setPosts({
+      ...posts,
+      nodes: nodes,
+      totalCount: posts.totalCount - 1,
+    });
+  };
+
   const deleteHandler = async () => {
     await Haptics.vibrate();
     present({
@@ -55,14 +60,21 @@ const DeletePost: React.FC<Props> = ({ postId, index, posts, setPosts }) => {
           },
         },
       ],
-      onDidDismiss: ({ detail }) => {
+      onDidDismiss: async ({ detail }) => {
         if (detail.role === "destructive") {
-          deletePost({
-            variables: {
-              input: { id: postId },
-            },
-          });
-          console.log("deleting...");
+          try {
+            const deleteRes = await deletePost({
+              variables: {
+                input: { id: postId },
+              },
+            });
+            if (deleteRes.data) {
+              deletePostFromList();
+            }
+            console.log("deleting...");
+          } catch (err) {
+            console.error("Error deleting: ", err);
+          }
         }
       },
     });

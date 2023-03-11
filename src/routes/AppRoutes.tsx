@@ -27,10 +27,10 @@ const AppRoutes: React.FC = () => {
         navigate.replace("/offline");
       }
     });
-  }, []);
+  }, [navigate]);
   useEffect(() => {
     if (!user) navigate.replace("/login");
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <>
