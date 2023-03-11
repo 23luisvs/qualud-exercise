@@ -20,7 +20,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import {
   CreatePostFormData,
@@ -29,8 +29,10 @@ import {
 } from "../../hooks/PostController";
 import { useAuth } from "../../store/AuthContext";
 
-interface Props {}
-const AddPost: React.FC<Props> = () => {
+interface Props {
+  myPostsAfterCreateHandler: () => void;
+}
+const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
   const { user } = useAuth();
   const [createPost, { data, loading, error }] = useMutation(CREATE_POST);
   const modal = useRef<HTMLIonModalElement>(null);
@@ -47,6 +49,13 @@ const AddPost: React.FC<Props> = () => {
     });
     console.log("Submited");
   };
+  //if create post success close modal and reload user posts
+  useEffect(()=>{
+    if(data){
+      myPostsAfterCreateHandler();
+      modal.current?.dismiss();
+    }
+  },[data]);
 
   return (
     <>

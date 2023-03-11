@@ -18,11 +18,14 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRow,
   IonSelect,
   IonSelectOption,
   IonText,
   IonToolbar,
+  RefresherEventDetail,
   useIonToast,
 } from "@ionic/react";
 import {
@@ -42,6 +45,7 @@ import { User } from "../../models/UserType";
 import { useAuth } from "../../store/AuthContext";
 import "./Posts.css";
 import AddPost from "../../components/posts/AddPost";
+import DeletePost from "../../components/posts/DeletePost";
 
 const Posts: React.FC = () => {
   const { user } = useAuth();
@@ -95,6 +99,11 @@ const Posts: React.FC = () => {
       getUserPosts({ variables: { id: user?.id } });
     }
   };
+  const myPostsAfterCreateHandler = () => {
+    setTypeOfPostsList(1);
+    setPosts(null);
+    getUserPosts({ variables: { id: user?.id } });
+  };
   // handler to the button filter ALL POSTS
   const allPostsFilterHandler = () => {
     if (selectedAuthor.current) selectedAuthor.current.selectedText = "";
@@ -116,10 +125,31 @@ const Posts: React.FC = () => {
       });
     }
   };
+  //refresh data swipe down
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    try {
+      if (typeOfPostsList === 0) {
+        await allPosts.refetch();
+      } else if (typeOfPostsList === 1) {
+        await getUserPosts({ variables: { id: user?.id } });
+      } else {
+        await getUserPosts({
+          variables: { id: +selectedAuthor.current?.value },
+        });
+      }
+      event.detail.complete();
+    } catch (err) {
+      console.log(err);
+      event.detail.complete();
+    }
+  };
   return (
     <IonPage>
       <Header pageTitle="Posts" backButton={true} />
       <IonContent fullscreen>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <div className="ion-padding">
           <h2>
             {typeOfPostsList === 0
@@ -148,7 +178,16 @@ const Posts: React.FC = () => {
                     <div className="ion-text-justify">{post.body}</div>
                     <IonGrid>
                       <IonRow>
-                        <IonCol size="auto">dsadas</IonCol>
+                        <IonCol size="auto">
+                          {user?.id === post.userId && (
+                            <DeletePost
+                              postId={post.id}
+                              index={index}
+                              posts={posts}
+                              setPosts={setPosts}
+                            />
+                          )}
+                        </IonCol>
                         <IonCol>
                           <div className="q-flex ion-justify-content-end ion-align-items-center">
                             {user?.id === post.userId &&
@@ -185,12 +224,21 @@ const Posts: React.FC = () => {
               </IonCardContent>
             </IonCard>
           )}
-          {(allPosts.loading || userAuthorPosts.loading || posts === null) && (
-            <PostsSkeletons />
+          {(allPosts.loading || userAuthorPosts.loading || posts === null) &&
+            !allPosts.error &&
+            !userAuthorPosts.error && <PostsSkeletons />}
+          {((allPosts.error && typeOfPostsList === 0) ||
+            (userAuthorPosts.error &&
+              (typeOfPostsList === 1 || typeOfPostsList === 2))) && (
+            <p>
+              <IonText color="danger" className="ion-text-center">
+                Ups, error when fetching data. Please swipe down to refresh.
+              </IonText>
+            </p>
           )}
         </div>
 
-        <AddPost />
+        <AddPost myPostsAfterCreateHandler={myPostsAfterCreateHandler} />
       </IonContent>
       <IonFooter>
         <IonToolbar className="">

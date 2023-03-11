@@ -28,6 +28,16 @@ mutation ($input:createPostInput!){
     }
   }
 }`
+//delete post
+export const DELETE_POST = gql`
+mutation ($input:deletePostInput!){
+  deletePost(input: $input) {
+    post {
+        id
+        title
+    }
+  }
+}`
 //queries
 export const ALL_POSTS = gql`
   query($after: String,$before: String) {
