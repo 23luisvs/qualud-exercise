@@ -14,37 +14,21 @@ import {
   IonSpinner,
   useIonToast,
 } from "@ionic/react";
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import "./Login.css";
 
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../store/AuthContext";
-import { LoginFormData, loginSchema } from "../hooks/LoginController";
+import {
+  GET_FIRST_USER,
+  LoginFormData,
+  loginSchema,
+} from "../hooks/LoginController";
 import { User } from "../models/UserType";
 
-const GET_FIRST_USER = gql`
-  query {
-    users(first: 1) {
-      nodes {
-        id
-        name
-        email
-        gender
-        posts {
-          totalCount
-        }
-        todos {
-          totalCount
-        }
-      }
-      totalCount
-    }
-  }
-`;
-
-const Home: React.FC = () => {
+const Login: React.FC = () => {
   const [getUser, { loading, error, data }] = useLazyQuery(GET_FIRST_USER);
 
   const { user, login } = useAuth();
@@ -52,8 +36,6 @@ const Home: React.FC = () => {
   //hook used to save user. When data change, if exist data means that the query returned an user.
   useEffect(() => {
     if (data) {
-      console.log(data.users.nodes[0]);
-
       login(data.users.nodes[0] as User);
     }
   }, [data]);
@@ -176,4 +158,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Login;
