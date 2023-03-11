@@ -25,7 +25,10 @@ const DeletePost: React.FC<Props> = ({ postId, index, posts, setPosts }) => {
 
   //delete post from list of posts
   const deletePostFromList = () => {
-    let nodes = posts.nodes;
+    let nodes = [...posts.nodes];
+    console.log("Nodes: ", nodes);
+    console.log("Index: ", index);
+
     nodes.splice(index, 1);
     console.log("After splice: ", {
       ...posts,

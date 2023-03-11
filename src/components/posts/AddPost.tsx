@@ -95,6 +95,7 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
               <IonTextarea
                 placeholder="Enter the content"
                 autoGrow={true}
+                rows={7}
                 {...register("body")}
               ></IonTextarea>
               <IonNote slot="helper">Required.</IonNote>
