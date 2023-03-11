@@ -9,13 +9,16 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonCol,
   IonContent,
   IonFooter,
+  IonGrid,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
+  IonRow,
   IonSelect,
   IonSelectOption,
   IonText,
@@ -33,10 +36,7 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../../components/Header";
 import PostsSkeletons from "../../components/posts/PostsSkeletons";
 import { ALL_USERS, GET_USER_POSTS_BY_ID } from "../../hooks/UserController";
-import {
-  ALL_POSTS,
-  showPostsQuantity,
-} from "../../hooks/PostController";
+import { ALL_POSTS, showPostsQuantity } from "../../hooks/PostController";
 import { Post, PostConnection } from "../../models/PostTypes";
 import { User } from "../../models/UserType";
 import { useAuth } from "../../store/AuthContext";
@@ -62,7 +62,7 @@ const Posts: React.FC = () => {
   //execute when change data or cuando se reciben datos de GET_USER_POSTS_BY_ID
   useEffect(() => {
     if (allPosts.data) {
-      console.log("All", allPosts.data);
+      console.log("All", allPosts);
       setPosts(allPosts.data.posts as PostConnection);
     }
   }, [allPosts.data]);
@@ -75,16 +75,11 @@ const Posts: React.FC = () => {
   }, [userAuthorPosts.data]);
   //execute a toast if error
   useEffect(() => {
-    if (allPosts.error)
+    if (allPosts.error || userAuthorPosts.error)
       present({
-        message: allPosts.error + "",
-        duration: 2000,
-        position: "top",
-        color: "danger",
-      });
-    if (userAuthorPosts.error)
-      present({
-        message: userAuthorPosts.error + "",
+        message: allPosts.error
+          ? allPosts.error + ""
+          : userAuthorPosts.error + "",
         duration: 2000,
         position: "top",
         color: "danger",
@@ -151,21 +146,34 @@ const Posts: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <div className="ion-text-justify">{post.body}</div>
-                    <div className="q-flex ion-justify-content-end ion-align-items-center">
-                      {user?.id === post.userId &&
-                        post.comments?.totalCount > 0 && (
-                          <IonButton className="ion-padding-end" size="small">
-                            <IonIcon slot="start" icon={eye} />
-                            <IonLabel>Show</IonLabel>
-                          </IonButton>
-                        )}
-                      <IonText className="q-flex ion-justify-content-end ion-align-items-center">
-                        <IonLabel className="mr-5">
-                          {post.comments?.totalCount}
-                        </IonLabel>
-                        <IonIcon className="mr-5" icon={chatboxEllipses} />
-                      </IonText>
-                    </div>
+                    <IonGrid>
+                      <IonRow>
+                        <IonCol size="auto">dsadas</IonCol>
+                        <IonCol>
+                          <div className="q-flex ion-justify-content-end ion-align-items-center">
+                            {user?.id === post.userId &&
+                              post.comments?.totalCount > 0 && (
+                                <IonButton
+                                  className="ion-padding-end"
+                                  size="small"
+                                >
+                                  <IonIcon slot="start" icon={eye} />
+                                  <IonLabel>Show</IonLabel>
+                                </IonButton>
+                              )}
+                            <IonText className="q-flex ion-justify-content-end ion-align-items-center">
+                              <IonLabel className="mr-5">
+                                {post.comments?.totalCount}
+                              </IonLabel>
+                              <IonIcon
+                                className="mr-5"
+                                icon={chatboxEllipses}
+                              />
+                            </IonText>
+                          </div>
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
                   </IonCardContent>
                 </IonCard>
               );

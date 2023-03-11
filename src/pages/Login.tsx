@@ -28,7 +28,7 @@ import {
 } from "../hooks/LoginController";
 import { User } from "../models/UserType";
 
-const Home: React.FC = () => {
+const Login: React.FC = () => {
   const [getUser, { loading, error, data }] = useLazyQuery(GET_FIRST_USER);
 
   const { user, login } = useAuth();
@@ -158,4 +158,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Login;

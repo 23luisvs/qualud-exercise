@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package es.qualud.exercise;
 
 import com.getcapacitor.BridgeActivity;
 

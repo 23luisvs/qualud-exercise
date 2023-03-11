@@ -21,3 +21,8 @@ interface PostEdge {
     cursor: string;
     node: Post;
 }
+interface createPostInput {
+    body: string;
+    title: string;
+    userId: number;
+  }

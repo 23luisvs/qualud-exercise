@@ -1,22 +1,34 @@
 import { gql } from "@apollo/client";
+import * as yup from "yup";
 
 export const showPostsQuantity = (totalPost: number) => {
-    if (totalPost === 1) {
-        return totalPost + " post";
-    }
-    return totalPost + " posts";
+  if (totalPost === 1) {
+    return totalPost + " post";
+  }
+  return totalPost + " posts";
 };
 export const showCommentsQuantity = (totalComments: number) => {
-    if (totalComments === 1) {
-        return totalComments + " comment";
-    }
-    return totalComments + " comments";
+  if (totalComments === 1) {
+    return totalComments + " comment";
+  }
+  return totalComments + " comments";
 };
-export const getMessageOfListPosts=(type:number)=>{
-  if(type===1)return "List of my posts";
-  
-  return "List of all Posts.";
-}
+//create Post
+export const createPostSchema = yup.object({
+  title: yup.string().required('Title is a required field'),
+  body: yup.string().required('Body is a required field'),
+}).required();
+export type CreatePostFormData = yup.InferType<typeof createPostSchema>;
+export const CREATE_POST = gql`
+mutation ($input:createPostInput!){
+  createPost(input: $input) {
+    post {
+        id
+        title
+    }
+  }
+}`
+//queries
 export const ALL_POSTS = gql`
   query($after: String,$before: String) {
     posts(after:$after,before:$before) {
