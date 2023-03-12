@@ -14,7 +14,13 @@ import {
 defineCustomElements(window);
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({ uri: "https://gorest.co.in/public/v2/graphql" }),
+  link: new HttpLink({
+    uri: "https://gorest.co.in/public/v2/graphql",
+    headers: {
+      authorization:
+        "Bearer 0f8b90701db4892bff3cd04bde62d025ff54ae8f26aa630ec2eacf2d868c86ff",
+    },
+  }),
 });
 const container = document.getElementById("root");
 const root = createRoot(container!);

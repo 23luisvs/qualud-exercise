@@ -9,6 +9,7 @@ import { useAuth } from "../store/AuthContext";
 import { Network } from "@capacitor/network";
 import Offline from "../pages/Offline";
 import { useEffect, useState } from "react";
+import Posts from "../pages/posts/Posts";
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -26,10 +27,10 @@ const AppRoutes: React.FC = () => {
         navigate.replace("/offline");
       }
     });
-  }, []);
+  }, [navigate]);
   useEffect(() => {
     if (!user) navigate.replace("/login");
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <>
@@ -42,16 +43,18 @@ const AppRoutes: React.FC = () => {
         <Route exact path="/home">
           <Home />
         </Route>
-
         <Route exact path="/">
           {user ? <Redirect to="/home" /> : <Redirect to="/login" />}
         </Route>
         <Route exact path="/offline">
           <Offline />
         </Route>
-        {/*Routes for users */}
+        {/*Routes for Functional Requirements */}
         <Route exact path="/users">
           <Users />
+        </Route>
+        <Route exact path="/posts">
+          <Posts />
         </Route>
         <Route component={NotFound} />
       </IonRouterOutlet>

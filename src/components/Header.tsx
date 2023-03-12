@@ -4,10 +4,8 @@ import {
   IonTitle,
   IonButtons,
   IonMenuButton,
-  IonIcon,
   IonBackButton,
 } from "@ionic/react";
-import { moonOutline } from "ionicons/icons";
 
 interface ContainerProps {
   pageTitle?: string;
