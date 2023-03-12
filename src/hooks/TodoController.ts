@@ -6,11 +6,11 @@ export const createTodoSchema = yup.object({
 }).required();
 export type CreateTodoFormData = yup.InferType<typeof createTodoSchema>;
 export const showDate = (date: Date) => {
-  return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
 }
 export const showTodosQuantity = (totalTodos: number) => {
   if (totalTodos === 1) {
-      return totalTodos + " todo";
+    return totalTodos + " todo";
   }
   return totalTodos + " todos";
 };
