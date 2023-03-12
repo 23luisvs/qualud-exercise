@@ -43,7 +43,6 @@ const AppRoutes: React.FC = () => {
         <Route exact path="/home">
           <Home />
         </Route>
-
         <Route exact path="/">
           {user ? <Redirect to="/home" /> : <Redirect to="/login" />}
         </Route>
