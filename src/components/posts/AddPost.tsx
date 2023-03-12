@@ -35,7 +35,7 @@ interface Props {
 const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
   const { user } = useAuth();
   const [createPost, { data, loading }] = useMutation(CREATE_POST);
-  const modal = useRef<HTMLIonModalElement>(null);
+  const modalCreatePost = useRef<HTMLIonModalElement>(null);
   const {
     register,
     handleSubmit,
@@ -53,21 +53,21 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
   useEffect(()=>{
     if(data){
       myPostsAfterCreateHandler();
-      modal.current?.dismiss();
+      modalCreatePost.current?.dismiss();
     }
   },[data,myPostsAfterCreateHandler]);
 
   return (
     <>
-      <IonFab slot="fixed" vertical="bottom" horizontal="center" edge={true}>
+      <IonFab slot="fixed" vertical="bottom" horizontal="end" edge={true}>
         <IonFabButton id="add-post">
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>
       </IonFab>
-      <IonModal ref={modal} trigger="add-post">
+      <IonModal ref={modalCreatePost} trigger="add-post">
         <IonHeader>
           <IonToolbar>
-            <IonTitle className="ion-text-center">Add Post</IonTitle>
+            <IonTitle className="ion-text-center">Create Post</IonTitle>
           </IonToolbar>
         </IonHeader>
 
@@ -111,7 +111,7 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
         <IonFooter>
           <IonToolbar className="ion-padding-start ion-padding-end">
             <IonButtons slot="start">
-              <IonButton onClick={() => modal.current?.dismiss()}>
+              <IonButton onClick={() => modalCreatePost.current?.dismiss()}>
                 Cancel
               </IonButton>
             </IonButtons>
@@ -121,7 +121,7 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
               form="create-post-form"
               color="primary"
             >
-              Confirm
+              Create
             </IonButton>
           </IonToolbar>
         </IonFooter>
