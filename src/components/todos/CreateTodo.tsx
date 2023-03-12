@@ -25,7 +25,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { useForm } from "react-hook-form";
 import {
   CreateTodoFormData,
@@ -44,7 +44,7 @@ const CreateTodo: React.FC<Props> = ({ todos, setTodos }) => {
   const [createTodo, { loading }] = useMutation(CREATE_TODO);
   const modalCreateTodo = useRef<HTMLIonModalElement>(null);
   const dueOn = useRef<HTMLIonDatetimeElement>(null);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const isStatusCompleted = useRef<HTMLIonToggleElement>(null);
   const [present] = useIonToast();
   let today = new Date();
 
@@ -61,7 +61,9 @@ const CreateTodo: React.FC<Props> = ({ todos, setTodos }) => {
           input: {
             title: dataForm.title,
             dueOn: dueOn.current?.value,
-            status: isCompleted ? "completed" : "pending",
+            status: isStatusCompleted.current?.checked
+              ? "completed"
+              : "pending",
             userId: user?.id,
           },
         },
@@ -71,7 +73,7 @@ const CreateTodo: React.FC<Props> = ({ todos, setTodos }) => {
       setTodos(listTodos);
       reset({ title: "" });
       modalCreateTodo.current?.dismiss();
-      setIsCompleted(false);
+      if (isStatusCompleted.current) isStatusCompleted.current.checked = false;
       console.log("creaDA", todoRes);
     } catch (err) {
       present({
@@ -131,11 +133,7 @@ const CreateTodo: React.FC<Props> = ({ todos, setTodos }) => {
                 <IonCol>
                   <IonItem>
                     <IonLabel>Is completed</IonLabel>
-                    <IonToggle
-                      checked={isCompleted}
-                      onIonChange={() => setIsCompleted(!isCompleted)}
-                      slot="end"
-                    ></IonToggle>
+                    <IonToggle ref={isStatusCompleted} slot="end"></IonToggle>
                   </IonItem>
                 </IonCol>
               </IonRow>
