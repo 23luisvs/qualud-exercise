@@ -10,7 +10,7 @@ export type LoginFormData = yup.InferType<typeof loginSchema>;
 
 export const GET_FIRST_USER = gql`
   query {
-    users(first: 1) {
+    users {
       nodes {
         id
         name

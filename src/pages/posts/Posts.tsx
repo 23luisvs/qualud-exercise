@@ -32,7 +32,6 @@ import {
   chatboxEllipses,
   chevronBack,
   chevronForward,
-  eye,
   funnel,
 } from "ionicons/icons";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -46,6 +45,7 @@ import { useAuth } from "../../store/AuthContext";
 import "./Posts.css";
 import AddPost from "../../components/posts/AddPost";
 import DeletePost from "../../components/posts/DeletePost";
+import ShowComments from "../../components/comments/ShowComments";
 
 const Posts: React.FC = () => {
   const { user } = useAuth();
@@ -205,13 +205,10 @@ const Posts: React.FC = () => {
                           <div className="q-flex ion-justify-content-end ion-align-items-center">
                             {user?.id === post.userId &&
                               post.comments?.totalCount > 0 && (
-                                <IonButton
-                                  className="ion-padding-end"
-                                  size="small"
-                                >
-                                  <IonIcon slot="start" icon={eye} />
-                                  <IonLabel>Show</IonLabel>
-                                </IonButton>
+                                <ShowComments
+                                  comments={post.comments}
+                                  postId={post.id}
+                                />
                               )}
                             <IonText className="q-flex ion-justify-content-end ion-align-items-center">
                               <IonLabel className="mr-5">
@@ -256,10 +253,10 @@ const Posts: React.FC = () => {
       <IonFooter>
         <IonToolbar className="">
           <IonAccordionGroup color="none">
-            <IonAccordion value="first" color="none">
+            <IonAccordion value="first" color="none" toggleIconSlot="start">
               <IonItem slot="header">
-                <IonIcon slot="start" icon={funnel}></IonIcon>
-                <IonLabel>Filters</IonLabel>
+                <IonIcon className="ion-padding-end" icon={funnel}></IonIcon>
+                <IonLabel>Posts filters</IonLabel>
               </IonItem>
               <div slot="content">
                 <IonButtons className="ion-padding q-flex ion-justify-content-around">
