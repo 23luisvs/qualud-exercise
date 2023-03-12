@@ -117,6 +117,7 @@ const ShowComments: React.FC<Props> = ({ comments, postId }) => {
                 </IonItem>
               );
             })}
+            {comments.nodes.length===0 && <IonItem><IonLabel>No comments.</IonLabel></IonItem>}
           </IonList>
         </IonContent>
         <IonFooter>

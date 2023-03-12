@@ -1,5 +1,6 @@
 import { PostConnection } from "./PostTypes";
 import { PageInfo } from "./SchemaGQLTypes";
+import { TodoConnection } from "./TodoTypes";
 
 export interface User {
   id: number;
@@ -7,7 +8,7 @@ export interface User {
   email: string;
   gender: string;
   posts:PostConnection;
-  todos:{nodes:{id:number}[],totalCount:number}
+  todos:TodoConnection;
 }
  interface UserConnection {
   edges?: UserEdge[];

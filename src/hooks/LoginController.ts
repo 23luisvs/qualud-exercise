@@ -20,6 +20,12 @@ export const GET_FIRST_USER = gql`
           totalCount
         }
         todos {
+          nodes{
+            id
+            title
+            status
+            dueOn
+          }
           totalCount
         }
       }

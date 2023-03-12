@@ -45,6 +45,7 @@ const Menu: React.FC<ContainerProps> = () => {
           <MenuItem link="/home">Home</MenuItem>
           <MenuItem link="/users">Users</MenuItem>
           <MenuItem link="/posts">Posts</MenuItem>
+          <MenuItem link="/todos">Todos</MenuItem>
           <div className="ion-text-end ion-padding">
             <IonButton onClick={() => logout()}>
               Sign Out
