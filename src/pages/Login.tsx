@@ -36,7 +36,12 @@ const Login: React.FC = () => {
   //hook used to save user. When data change, if exist data means that the query returned an user.
   useEffect(() => {
     if (data) {
-      login(data.users.nodes[0] as User);
+      //se ordena para usar el Usuario con mayor cantidad de posts y tener mayor oportunidad ver comentarios.
+      let toOrderData = [...data.users.nodes];
+      toOrderData.sort((a: User, b: User) => {
+        return b.posts.totalCount - a.posts.totalCount;
+      });
+      login(toOrderData[0] as User);
     }
   }, [data, login]);
   //if exist an error lanch a toast
@@ -48,7 +53,7 @@ const Login: React.FC = () => {
         position: "top",
         color: "danger",
       });
-  }, [error,present]);
+  }, [error, present]);
 
   const {
     register,

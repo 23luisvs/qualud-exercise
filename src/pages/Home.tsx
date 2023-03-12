@@ -61,8 +61,47 @@ const Home: React.FC = () => {
                   es autor.
                 </li>
               </ul>
+              <p>
+                <strong>Comments</strong>
+              </p>
+              <ul>
+                <li>
+                  El usuario debe poder ver una lista de comentarios solo de sus
+                  publicaciones.
+                </li>
+                <li>
+                  El usuario debe poder eliminar comentarios de sus
+                  publicaciones
+                </li>
+              </ul>
+
               <div className="ion-text-end">
                 <IonButton routerLink="/posts" routerDirection="forward">
+                  Go to page <IonIcon slot="end" icon={arrowForward} />
+                </IonButton>
+              </div>
+            </IonCardContent>
+          </IonCard>
+          <IonCard>
+            <IonCardHeader>
+              <IonCardTitle>Todo</IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent>
+              <ul>
+                <li>
+                  El usuario debe poder ver una lista de tareas existentes.
+                </li>
+                <li>
+                  El usuario debe poder agregar una nueva tarea a la lista.
+                </li>
+                <li>
+                  El usuario debe poder cambiar el estado de una tarea de
+                  pendiente a completada o viceversa.
+                </li>
+                <li>El usuario debe poder eliminar una tarea de la lista.</li>
+              </ul>
+              <div className="ion-text-end">
+                <IonButton routerLink="/todos" routerDirection="forward">
                   Go to page <IonIcon slot="end" icon={arrowForward} />
                 </IonButton>
               </div>

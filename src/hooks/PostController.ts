@@ -59,6 +59,11 @@ export const ALL_POSTS = gql`
         }
         userId
         comments {
+          nodes{
+            id
+            body
+            name
+          }
           totalCount
         }
       }

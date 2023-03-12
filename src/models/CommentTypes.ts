@@ -5,7 +5,7 @@ export interface CommentConnection {
     //A list of edges.
     edges?: CommentEdge[];
     //A list of nodes.
-    nodes?: Comment[];
+    nodes: Comment[];
     //Information to aid in pagination.
     pageInfo?: PageInfo;
     //Total count of items
@@ -20,9 +20,9 @@ interface CommentEdge {
 }
 export interface Comment {
     body: String;
-    email: String;
+    email?: String;
     id: number;
     name: String;
-    post: Post;
-    postId: number;
+    post?: Post;
+    postId?: number;
 }

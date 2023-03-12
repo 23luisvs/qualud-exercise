@@ -20,7 +20,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import {
   CreatePostFormData,
@@ -34,40 +34,46 @@ interface Props {
 }
 const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
   const { user } = useAuth();
-  const [createPost, { data, loading }] = useMutation(CREATE_POST);
-  const modal = useRef<HTMLIonModalElement>(null);
+  const [createPost, { loading }] = useMutation(CREATE_POST);
+  const modalCreatePost = useRef<HTMLIonModalElement>(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CreatePostFormData>({ resolver: yupResolver(createPostSchema) });
-  const onSubmit = (dataForm: CreatePostFormData) => {
-    createPost({
-      variables: {
-        input: { title: dataForm.title, body: dataForm.body, userId: user?.id },
-      },
-    });
-    console.log("Submited");
-  };
-  //if create post success close modal and reload user posts
-  useEffect(()=>{
-    if(data){
+  const onSubmit = async (dataForm: CreatePostFormData) => {
+    try {
+      await createPost({
+        variables: {
+          input: {
+            title: dataForm.title,
+            body: dataForm.body,
+            userId: user?.id,
+          },
+        },
+      });
       myPostsAfterCreateHandler();
-      modal.current?.dismiss();
-    }
-  },[data,myPostsAfterCreateHandler]);
+      modalCreatePost.current?.dismiss();
+      reset({
+        title: "",
+        body: "",
+      });
+      console.log("Submited");
+    } catch (err) {}
+  };
 
   return (
     <>
-      <IonFab slot="fixed" vertical="bottom" horizontal="center" edge={true}>
+      <IonFab slot="fixed" vertical="bottom" horizontal="end" edge={true}>
         <IonFabButton id="add-post">
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>
       </IonFab>
-      <IonModal ref={modal} trigger="add-post">
+      <IonModal ref={modalCreatePost} trigger="add-post">
         <IonHeader>
           <IonToolbar>
-            <IonTitle className="ion-text-center">Add Post</IonTitle>
+            <IonTitle className="ion-text-center">Create Post</IonTitle>
           </IonToolbar>
         </IonHeader>
 
@@ -111,7 +117,7 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
         <IonFooter>
           <IonToolbar className="ion-padding-start ion-padding-end">
             <IonButtons slot="start">
-              <IonButton onClick={() => modal.current?.dismiss()}>
+              <IonButton onClick={() => modalCreatePost.current?.dismiss()}>
                 Cancel
               </IonButton>
             </IonButtons>
@@ -121,7 +127,7 @@ const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
               form="create-post-form"
               color="primary"
             >
-              Confirm
+              Create
             </IonButton>
           </IonToolbar>
         </IonFooter>
