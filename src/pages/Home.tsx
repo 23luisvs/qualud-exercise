@@ -101,7 +101,7 @@ const Home: React.FC = () => {
                 <li>El usuario debe poder eliminar una tarea de la lista.</li>
               </ul>
               <div className="ion-text-end">
-                <IonButton routerLink="/users" routerDirection="forward">
+                <IonButton routerLink="/todos" routerDirection="forward">
                   Go to page <IonIcon slot="end" icon={arrowForward} />
                 </IonButton>
               </div>

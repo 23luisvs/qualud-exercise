@@ -10,6 +10,7 @@ import { Network } from "@capacitor/network";
 import Offline from "../pages/Offline";
 import { useEffect, useState } from "react";
 import Posts from "../pages/posts/Posts";
+import Todos from "../pages/todos/Todos";
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -55,6 +56,9 @@ const AppRoutes: React.FC = () => {
         </Route>
         <Route exact path="/posts">
           <Posts />
+        </Route>
+        <Route exact path="/todos">
+          <Todos />
         </Route>
         <Route component={NotFound} />
       </IonRouterOutlet>

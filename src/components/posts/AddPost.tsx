@@ -20,7 +20,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import {
   CreatePostFormData,
@@ -34,28 +34,34 @@ interface Props {
 }
 const AddPost: React.FC<Props> = ({ myPostsAfterCreateHandler }) => {
   const { user } = useAuth();
-  const [createPost, { data, loading }] = useMutation(CREATE_POST);
+  const [createPost, { loading }] = useMutation(CREATE_POST);
   const modalCreatePost = useRef<HTMLIonModalElement>(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CreatePostFormData>({ resolver: yupResolver(createPostSchema) });
-  const onSubmit = (dataForm: CreatePostFormData) => {
-    createPost({
-      variables: {
-        input: { title: dataForm.title, body: dataForm.body, userId: user?.id },
-      },
-    });
-    console.log("Submited");
-  };
-  //if create post success close modal and reload user posts
-  useEffect(()=>{
-    if(data){
+  const onSubmit = async (dataForm: CreatePostFormData) => {
+    try {
+      await createPost({
+        variables: {
+          input: {
+            title: dataForm.title,
+            body: dataForm.body,
+            userId: user?.id,
+          },
+        },
+      });
       myPostsAfterCreateHandler();
       modalCreatePost.current?.dismiss();
-    }
-  },[data,myPostsAfterCreateHandler]);
+      reset({
+        title: "",
+        body: "",
+      });
+      console.log("Submited");
+    } catch (err) {}
+  };
 
   return (
     <>

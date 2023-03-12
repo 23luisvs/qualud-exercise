@@ -30,11 +30,11 @@ const DeletePost: React.FC<Props> = ({ postId, index, posts, setPosts }) => {
     console.log("Index: ", index);
 
     nodes.splice(index, 1);
-    console.log("After splice: ", {
+    /*console.log("After splice: ", {
       ...posts,
       nodes: nodes,
       totalCount: posts.totalCount - 1,
-    });
+    });*/
 
     setPosts({
       ...posts,
