@@ -25,9 +25,9 @@ ToDo:<br>
 ✔ El usuario debe poder ver una lista de tareas existentes.<br>
 ✔ El usuario debe poder agregar una nueva tarea a la lista.<br>
 ✔ El usuario debe poder cambiar el estado de una tarea de pendiente a completada o viceversa.<br>
-✔El usuario debe poder eliminar una tarea de la lista.<br><br>
+✔ El usuario debe poder eliminar una tarea de la lista.<br><br>
 Observación:<br>
-Los dos ultimos requisitos se simuló el funcionamiento con setTimeout, no se cambia la BD.<br>
+En los dos últimos requisitos se simuló el funcionamiento con setTimeout, no se cambia la BD.<br>
 Al agregar una tarea no se utiliza el horario local<br>
              
 Observación general: <br>
